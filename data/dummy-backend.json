@@ -2,15 +2,18 @@
   "products": [
     {
       "id": "p1",
-      "title": "Product1"
+      "title": "Product1",
+      "description": "This is product1"
     },
     {
       "id": "p2",
-      "title": "Product2"
+      "title": "Product2",
+      "description": "This is product2"
     },
     {
       "id": "p3",
-      "title": "Product3"
+      "title": "Product3",
+      "description": "This is product3"
     }
   ]
 }
