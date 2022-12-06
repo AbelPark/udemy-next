@@ -1,16 +1,26 @@
-import Link from "next/link";
+import path from "path";
+import fs from "fs/promises"; // node 핵심 모듈
 
-export default function Home() {
+export default function Home(props: any) {
+  const { products } = props;
   return (
     <>
-      <div>Home</div>
       <ul>
-        <li>
-          <Link replace href="/blog/21/11">
-            페이지 이동
-          </Link>
-        </li>
+        {products.map((product: any) => {
+          return <li key={product.id}>{product.title}</li>;
+        })}
       </ul>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
+  const jsonData: any = await fs.readFile(filePath);
+  const data: any = JSON.parse(jsonData);
+  return {
+    props: {
+      products: data.products,
+    },
+  };
 }
