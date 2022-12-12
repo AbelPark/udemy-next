@@ -3,6 +3,7 @@ import EventList from "../../components/events/event-list";
 import EventsSearch from "../../components/events/events-search";
 import { useRouter } from "next/router";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import Head from "next/head";
 
 export default function AllEventsPage() {
   const { data } = useQuery({
@@ -18,6 +19,10 @@ export default function AllEventsPage() {
   }
   return (
     <>
+      <Head>
+        <title>All Events</title>
+        <meta name="description" content="모든 이벤트 입니다." />
+      </Head>
       <EventsSearch onSearch={findEventsHandler} />
       <EventList items={data} />
     </>

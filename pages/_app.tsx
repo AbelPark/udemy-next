@@ -9,7 +9,7 @@ import React from "react";
 import Layout from "../components/layout/layout";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(() => new QueryClient({}));
 
   return (
     <QueryClientProvider client={queryClient}>

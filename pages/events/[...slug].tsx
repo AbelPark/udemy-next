@@ -1,28 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import EventList from "../../components/events/event-list";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
 import ErrorAlert from "../../components/ui/error-alert";
-import { getFilteredEvents } from "../../dummy-data";
+import { getFilteredEvents } from "../../helpers/api-util.js";
 
 export default function FilteredEventsPage() {
   const router = useRouter();
-  const filterData = router.query.slug ?? [0, 0];
+  const filterData = router.query.slug;
   const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+  console.log({ year: numYear, month: numMonth });
 
-  const { data } = useQuery({
-    queryKey: ["filteredEvents"],
-    queryFn: () =>
-      getFilteredEvents({
-        year: numYear,
-        month: numMonth,
-      }),
-  });
+
+  const { data } = useQuery(["filteredEvents"], () =>
+    getFilteredEvents({ year: numYear, month: numMonth })
+  );
+
+  
+  useEffect(()=>{
+if(data) {
+  
+}
+  }.[data])
 
   if (!data) {
     return <p className="center">Loading...</p>;
@@ -65,6 +71,13 @@ export default function FilteredEventsPage() {
 
   return (
     <>
+      <Head>
+        <title>filtered event</title>
+        <meta
+          name="description"
+          content={`All events for ${numMonth}/${numYear}`}
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={data} />
     </>

@@ -9,6 +9,7 @@ import EventLogistics from "../../components/events/event-detail/event-logistics
 import EvenContent from "../../components/events/event-detail/event-content";
 import ErrorAlert from "../../components/ui/error-alert";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import Head from "next/head.js";
 
 export default function EventDetailPage(props: any) {
   const { data } = useQuery({
@@ -25,6 +26,10 @@ export default function EventDetailPage(props: any) {
   }
   return (
     <>
+      <Head>
+        <title>{data.title}</title>
+        <meta name="description" content={data.description} />
+      </Head>
       <EventSummary title={data.title} />
       <EventLogistics
         date={data.date}
