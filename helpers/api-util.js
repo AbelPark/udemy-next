@@ -27,7 +27,7 @@ export async function getEventPath() {
   const allEvents = await getAllEvents();
   const data = [];
   for (const item in allEvents) {
-    data.push({ params: { id: item.id } });
+    data.push({ params: { eventId: item.id } });
   }
   return data;
 }

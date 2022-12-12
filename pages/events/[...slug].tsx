@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import EventList from "../../components/events/event-list";
 import ResultsTitle from "../../components/events/results-title";
@@ -7,18 +8,25 @@ import { getFilteredEvents } from "../../dummy-data";
 
 export default function FilteredEventsPage() {
   const router = useRouter();
-  const filterData = router.query.slug;
-  console.log(filterData);
-
-  if (!filterData) {
-    return <p className="center">Loading...</p>;
-  }
-
+  const filterData = router.query.slug ?? [0, 0];
   const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+
+  const { data } = useQuery({
+    queryKey: ["filteredEvents"],
+    queryFn: () =>
+      getFilteredEvents({
+        year: numYear,
+        month: numMonth,
+      }),
+  });
+
+  if (!data) {
+    return <p className="center">Loading...</p>;
+  }
 
   if (
     isNaN(numYear) ||
@@ -40,12 +48,7 @@ export default function FilteredEventsPage() {
     );
   }
 
-  const filteredEvents = getFilteredEvents({
-    year: numYear,
-    month: numMonth,
-  });
-
-  if (!filteredEvents || filteredEvents.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <>
         <ErrorAlert>
@@ -63,7 +66,7 @@ export default function FilteredEventsPage() {
   return (
     <>
       <ResultsTitle date={date} />
-      <EventList items={filteredEvents} />
+      <EventList items={data} />
     </>
   );
 }

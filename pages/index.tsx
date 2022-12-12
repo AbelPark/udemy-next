@@ -1,19 +1,28 @@
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import EventList from "../components/events/event-list";
-import { getFeaturedEvents } from "../helpers/api-util.js";
+import { getFeaturedEvents, getAllEvents } from "../helpers/api-util.js";
 
 export default function HomePage(props: any) {
+  const { data } = useQuery({
+    queryKey: ["featuredEvents"],
+    queryFn: getFeaturedEvents,
+  });
+
   return (
     <>
-      <EventList items={props.events} />
+      <EventList items={data} />
     </>
   );
 }
 
 export async function getStaticProps() {
-  const res = await getFeaturedEvents();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["featuredEvents"], getFeaturedEvents);
+
   return {
     props: {
-      events: res,
+      dehydratedState: dehydrate(queryClient),
     },
   };
 }

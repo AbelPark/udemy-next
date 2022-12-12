@@ -8,58 +8,55 @@ import EventSummary from "../../components/events/event-detail/event-summary";
 import EventLogistics from "../../components/events/event-detail/event-logistics";
 import EvenContent from "../../components/events/event-detail/event-content";
 import ErrorAlert from "../../components/ui/error-alert";
-import { useEffect, useState } from "react";
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 
-export default function EventDetailPage() {
-  const [rr, setRr]: any = useState([]);
+export default function EventDetailPage(props: any) {
+  const { data } = useQuery({
+    queryKey: ["featuredEvents"],
+    queryFn: () => getEventById(props.eventId),
+  });
 
-  async function kk() {
-    const zz = await getAllEvents();
-    setRr(zz);
-    console.log(rr);
+  if (!data) {
+    return (
+      <ErrorAlert>
+        <p>No event found!</p>
+      </ErrorAlert>
+    );
   }
-
-  useEffect(() => {
-    kk();
-  }, []);
-
-  // const router = useRouter();
-  // const eventId = router.query.eventId;
-  // const event = getEventById(eventId);
-  // if (!event) {
-  //   return (
-  //     <ErrorAlert>
-  //       <p>No event found!</p>
-  //     </ErrorAlert>
-  //   );
-  // }
   return (
     <>
-      {/* <EventSummary title={event.title} />
+      <EventSummary title={data.title} />
       <EventLogistics
-        date={event.date}
-        address={event.location}
-        image={event.image}
-        imageAlt={event.title}
+        date={data.date}
+        address={data.location}
+        image={data.image}
+        imageAlt={data.title}
       />
       <EvenContent>
-        <p>{event.description}</p>
-      </EvenContent> */}
+        <p>{data.description}</p>
+      </EvenContent>
     </>
   );
 }
-// async function getPath() {
-//   const paths = await getEventPath();
-//   return paths;
-// }
+export async function getStaticPaths() {
+  const events = await getAllEvents();
+  const paths = events?.map((event) => ({ params: { eventId: event.id } }));
+  return {
+    paths: paths,
+    fallback: false,
+  };
+}
 
-// export async function getStaticPaths() {
-//   return {
-//     path: await getEventPath(),
-//     fallback: false,
-//   };
-// }
-
-// export async function getStaticProps(context: any) {
-//   console.log(context.query);
-// }
+export async function getStaticProps(context: any) {
+  const eventId = context.params.eventId;
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["featuredEvents"], () =>
+    getEventById(eventId)
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      eventId: eventId,
+    },
+  };
+}
