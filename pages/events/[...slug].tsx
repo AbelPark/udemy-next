@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EventList from "../../components/events/event-list";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
@@ -10,27 +10,22 @@ import { getFilteredEvents } from "../../helpers/api-util.js";
 
 export default function FilteredEventsPage() {
   const router = useRouter();
-  const filterData = router.query.slug;
+  const filterData = router.query.slug ?? [0, 0];
   const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
-  console.log({ year: numYear, month: numMonth });
 
-
-  const { data } = useQuery(["filteredEvents"], () =>
+  // 서버사이드에서 pre-render시에 useRouter가 동작하지 않아 초기값이 filterData가 [0,0]으로 잡히고,
+  // 해당 값이 캐싱되어 스크린이 포커스 되어 re-flesh되기 전까지 [0,0]에 해당하는 결과가 나온다.
+  // 쿼리 키값을 filterData 즉, 서버사이드에서 호출했던 값이 아닌, 클라이언트사이드에서 호출한 최신 값에 맞춰주면
+  // 문제 해결됨
+  const { data, isLoading } = useQuery(["filteredEvents", filterData], () =>
     getFilteredEvents({ year: numYear, month: numMonth })
   );
 
-  
-  useEffect(()=>{
-if(data) {
-  
-}
-  }.[data])
-
-  if (!data) {
+  if (isLoading) {
     return <p className="center">Loading...</p>;
   }
 
