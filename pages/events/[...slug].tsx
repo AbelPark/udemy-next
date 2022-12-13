@@ -25,8 +25,23 @@ export default function FilteredEventsPage() {
     getFilteredEvents({ year: numYear, month: numMonth })
   );
 
+  const pageHeaderData = (
+    <Head>
+      <title>filtered event</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  );
+
   if (isLoading) {
-    return <p className="center">Loading...</p>;
+    return (
+      <>
+        {pageHeaderData}
+        <p className="center">Loading...</p>;
+      </>
+    );
   }
 
   if (
@@ -39,6 +54,7 @@ export default function FilteredEventsPage() {
   ) {
     return (
       <>
+        {pageHeaderData}
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
@@ -52,6 +68,7 @@ export default function FilteredEventsPage() {
   if (!data || data.length === 0) {
     return (
       <>
+        {pageHeaderData}
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -66,12 +83,10 @@ export default function FilteredEventsPage() {
 
   return (
     <>
+      {pageHeaderData}
       <Head>
         <title>filtered event</title>
-        <meta
-          name="description"
-          content={`All events for ${numMonth}/${numYear}`}
-        />
+        <meta name="description" content={`A list of filtered data`} />
       </Head>
       <ResultsTitle date={date} />
       <EventList items={data} />

@@ -21,7 +21,7 @@ export default function AllEventsPage() {
     <>
       <Head>
         <title>All Events</title>
-        <meta name="description" content="모든 이벤트 입니다." />
+        <meta name="description" content="모든 이벤트 입니다." key="my" />
       </Head>
       <EventsSearch onSearch={findEventsHandler} />
       <EventList items={data} />
