@@ -7,13 +7,14 @@ import {
 import EventSummary from "../../components/events/event-detail/event-summary";
 import EventLogistics from "../../components/events/event-detail/event-logistics";
 import EvenContent from "../../components/events/event-detail/event-content";
+import Comments from "../../components/input/comments";
 import ErrorAlert from "../../components/ui/error-alert";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import Head from "next/head.js";
 
 export default function EventDetailPage(props: any) {
   const { data } = useQuery({
-    queryKey: ["featuredEvents"],
+    queryKey: ["selectedEvent"],
     queryFn: () => getEventById(props.eventId),
   });
 
@@ -40,6 +41,7 @@ export default function EventDetailPage(props: any) {
       <EvenContent>
         <p>{data.description}</p>
       </EvenContent>
+      <Comments eventId={props.eventId} />
     </>
   );
 }
@@ -55,7 +57,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: any) {
   const eventId = context.params.eventId;
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["featuredEvents"], () =>
+  await queryClient.prefetchQuery(["selectedEvent"], () =>
     getEventById(eventId)
   );
   return {

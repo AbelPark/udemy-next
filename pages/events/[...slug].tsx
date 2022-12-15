@@ -89,7 +89,7 @@ export default function FilteredEventsPage() {
         <meta name="description" content={`A list of filtered data`} />
       </Head>
       <ResultsTitle date={date} />
-      <EventList items={data} />
+      {/* <EventList items={data} /> */}
     </>
   );
 }

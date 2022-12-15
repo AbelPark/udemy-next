@@ -1,5 +1,4 @@
 .header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -11,7 +10,7 @@
 .logo {
   font-size: 1.5rem;
   color: white;
-  font-family: 'Fira', sans-serif;
+  font-family: "Fira", sans-serif;
   height: 100%;
   display: flex;
   justify-content: center;

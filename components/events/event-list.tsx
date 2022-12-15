@@ -4,17 +4,19 @@ import classes from "./event-list.module.css";
 export default function EventList(props: any) {
   const { items } = props;
   return (
-    <ul className={classes.list}>
-      {items.map((event: any, idx: number) => (
-        <EventItem
-          key={idx}
-          title={event.title}
-          image={event.image}
-          date={event.date}
-          id={event.id}
-          location={event.location}
-        />
-      ))}
-    </ul>
+    items && (
+      <ul className={classes.list}>
+        {items.map((event: any, idx: number) => (
+          <EventItem
+            key={idx}
+            title={event.title}
+            image={event.image}
+            date={event.date}
+            id={event.id}
+            location={event.location}
+          />
+        ))}
+      </ul>
+    )
   );
 }
