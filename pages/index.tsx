@@ -1,16 +1,9 @@
-import Link from "next/link";
+import StartingPageContent from "../components/starting-page/starting-page";
 
 export default function Home() {
   return (
     <>
-      <div>Home</div>
-      <ul>
-        <li>
-          <Link replace href="/blog/21/11">
-            페이지 이동
-          </Link>
-        </li>
-      </ul>
+      <StartingPageContent />
     </>
   );
 }
