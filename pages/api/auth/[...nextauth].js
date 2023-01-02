@@ -2,7 +2,8 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "../../../lib/db";
 import { verifyPassword } from "../../../lib/auth";
-export default NextAuth({
+
+export const authOptions = {
   session: {
     strategy: "jwt",
   },
@@ -13,7 +14,6 @@ export default NextAuth({
         const usersCollection = client
           .db()
           .collection(process.env.mongodb_database);
-
         const user = await usersCollection.findOne({
           email: credentials.email,
         });
@@ -21,11 +21,11 @@ export default NextAuth({
           client.close();
           throw new Error("No user found!");
         }
-
         const isValid = await verifyPassword(
           credentials.password,
           user.password
         );
+        console.log(isValid);
 
         if (!isValid) {
           client.close();
@@ -38,4 +38,6 @@ export default NextAuth({
       },
     }),
   ],
-});
+};
+
+export default NextAuth(authOptions);
