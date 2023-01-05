@@ -4,20 +4,14 @@ import classes from "./user-profile.module.css";
 
 function UserProfile() {
   async function changePasswordHandler(passwordData) {
-    // const response = await fetch("/api/user/change-password", {
-    //   method: "PATCH",
-    //   body: JSON.stringify(passwordData),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    const response = await axios.patch(
-      "/api/user/change-password",
-      passwordData
-    );
-
-    const data = await response.json();
-    console.log(data);
+    try {
+      const response = await axios.patch(
+        "/api/user/change-password",
+        passwordData
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

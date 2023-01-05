@@ -17,12 +17,13 @@ async function handler(req, res) {
 
   const userEmail = session.user.email;
   console.log(userEmail);
+  console.log(req.body);
   const oldPassword = req.body.oldPassword;
   const newPassword = req.body.newPassword;
 
   const client = await connectToDatabase();
 
-  const usersCollection = client.db().collection("users");
+  const usersCollection = client.db().collection(process.env.mongodb_database);
 
   const user = await usersCollection.findOne({ email: userEmail });
 
@@ -43,7 +44,7 @@ async function handler(req, res) {
 
   const hashedPassword = await hashPassword(newPassword);
 
-  const result = usersCollection.updateOne(
+  const result = await usersCollection.updateOne(
     { email: userEmail },
     { $set: { password: hashedPassword } }
   );
